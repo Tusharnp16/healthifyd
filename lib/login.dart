@@ -5,9 +5,14 @@ import 'package:healthifyd/home.dart';
 import 'navigation.dart';
 
 
-class loginscreen extends StatelessWidget{
+class loginscreen extends StatefulWidget{
   const loginscreen({Key? key}) : super(key: key);
 
+  @override
+  State<loginscreen> createState() => _loginscreenState();
+}
+
+class _loginscreenState extends State<loginscreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,6 +63,7 @@ class loginscreen extends StatelessWidget{
                           prefixIcon: Icon(Icons.person_2_rounded,color: Colors.purple,),
                           hintText: "Mobile No",
                         ),
+                        maxLength: 10,
                       ),
                       const SizedBox(height : 20),
                       const TextField(
@@ -96,7 +102,7 @@ class loginscreen extends StatelessWidget{
                           ),
                           onPressed: () {
                             Navigator.push(context,
-                              MaterialPageRoute(builder: (context) =>  NavigationMenu()),);
+                              MaterialPageRoute(builder: (context) =>  const NavigationMenu()),);
                           },
                         ),
                       ),

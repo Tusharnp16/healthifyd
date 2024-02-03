@@ -1,32 +1,59 @@
+import 'dart:typed_data';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:healthifyd/util.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'navigation.dart';
 
-class profile extends StatelessWidget{
+class profile extends StatefulWidget {
+  @override
+  State<profile> createState() => _profileState();
+}
+
+class _profileState extends State<profile> {
+  Uint8List? _image;
+
+  void selectimage() async {
+    Uint8List img = await pickimage(ImageSource.gallery);
+    setState(() {});
+    _image = img;
+  }
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: SingleChildScrollView(
-
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
-                    height: 100,
-                    width: 100,
-                    child: ClipOval(
-                        child: Image.asset("assets/images/admin.jpg"))
+                  height: 100,
+                  width: 100,
+                  child: Stack(children: [
+                    _image != null
+                        ? CircleAvatar(
+                            radius: 64,
+                            backgroundImage: MemoryImage(_image!),
+                          )
+                        : ClipOval(
+                            child: Image.asset("assets/images/admin.jpg"))
+                  ]),
                 ),
-                const Text("Edit Photo", style: TextStyle(
-                  fontSize: 15,
-                  color: Colors.blue,
-                ),
+                GestureDetector(
+                  child: const Text(
+                    "Edit Photo",
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.blue,
+                    ),
+                  ),
+                  onTap: selectimage,
                 ),
                 SizedBox(
                   height: 20,
@@ -37,84 +64,114 @@ class profile extends StatelessWidget{
                       borderSide: BorderSide(color: Colors.purple),
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                     ),
-                    focusedBorder:OutlineInputBorder(
+                    focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.purple),
                         borderRadius: BorderRadius.all(Radius.circular(20))),
-                    prefixIcon: Icon(Icons.person_2_rounded,color: Colors.purple,),
+                    prefixIcon: Icon(
+                      Icons.person_2_rounded,
+                      color: Colors.purple,
+                    ),
                     hintText: "Name",
                   ),
                 ),
-                SizedBox(height: 10,),
+                SizedBox(
+                  height: 10,
+                ),
                 const TextField(
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.purple),
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                     ),
-                    focusedBorder:OutlineInputBorder(
+                    focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.purple),
                         borderRadius: BorderRadius.all(Radius.circular(20))),
-                    prefixIcon: Icon(Icons.person_2_rounded,color: Colors.purple,),
+                    prefixIcon: Icon(
+                      Icons.person_2_rounded,
+                      color: Colors.purple,
+                    ),
                     hintText: "Gender",
                   ),
                 ),
-                SizedBox(height: 10,),
+                SizedBox(
+                  height: 10,
+                ),
                 const TextField(
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.purple),
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                     ),
-                    focusedBorder:OutlineInputBorder(
+                    focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.purple),
                         borderRadius: BorderRadius.all(Radius.circular(20))),
-                    prefixIcon: Icon(Icons.person_2_rounded,color: Colors.purple,),
+                    prefixIcon: Icon(
+                      Icons.person_2_rounded,
+                      color: Colors.purple,
+                    ),
                     hintText: "Mobile No",
                   ),
                 ),
-                SizedBox(height: 10,),
+                SizedBox(
+                  height: 10,
+                ),
                 const TextField(
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.purple),
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                     ),
-                    focusedBorder:OutlineInputBorder(
+                    focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.purple),
                         borderRadius: BorderRadius.all(Radius.circular(20))),
-                    prefixIcon: Icon(Icons.person_2_rounded,color: Colors.purple,),
+                    prefixIcon: Icon(
+                      Icons.person_2_rounded,
+                      color: Colors.purple,
+                    ),
                     hintText: "Email Id",
                   ),
                 ),
-                SizedBox(height: 10,),
+                SizedBox(
+                  height: 10,
+                ),
                 const TextField(
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.purple),
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                     ),
-                    focusedBorder:OutlineInputBorder(
+                    focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.purple),
                         borderRadius: BorderRadius.all(Radius.circular(20))),
-                    prefixIcon: Icon(Icons.person_2_rounded,color: Colors.purple,),
+                    prefixIcon: Icon(
+                      Icons.person_2_rounded,
+                      color: Colors.purple,
+                    ),
                     hintText: "Specialist",
                   ),
                 ),
-                SizedBox(height: 10,),
+                SizedBox(
+                  height: 10,
+                ),
                 const TextField(
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.purple),
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                     ),
-                    focusedBorder:OutlineInputBorder(
+                    focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.purple),
                         borderRadius: BorderRadius.all(Radius.circular(20))),
-                    prefixIcon: Icon(Icons.person_2_rounded,color: Colors.purple,),
+                    prefixIcon: Icon(
+                      Icons.person_2_rounded,
+                      color: Colors.purple,
+                    ),
                     hintText: "Hospital",
                   ),
                 ),
-                SizedBox(height: 10,),
+                SizedBox(
+                  height: 10,
+                ),
                 CupertinoButton(
                   padding: EdgeInsets.zero,
                   child: Container(
@@ -134,12 +191,13 @@ class profile extends StatelessWidget{
                     ),
                   ),
                   onPressed: () {
-                    Navigator.push(context,
-                      MaterialPageRoute(builder: (context) =>  NavigationMenu()),);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => NavigationMenu()),
+                    );
                   },
                 ),
               ],
-
             ),
           ),
         ),

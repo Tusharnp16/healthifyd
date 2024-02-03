@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:healthifyd/appoiment.dart';
 import 'package:healthifyd/home.dart';
 import 'package:healthifyd/login.dart';
+import 'package:healthifyd/navigation.dart';
 
 void main() {
   runApp(const MyApp());
