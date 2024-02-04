@@ -197,11 +197,13 @@ class _profileState extends State<profile> {
                     ),
                   ),
                   onPressed: () {
+                    controller.uploadImageToFirebase();
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => NavigationMenu()),
                     );
                   },
+                  
                 ),
               ],
             ),

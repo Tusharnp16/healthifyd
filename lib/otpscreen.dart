@@ -1,30 +1,23 @@
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:healthifyd/home.dart';
-import 'package:healthifyd/otpscreen.dart';
 
 import 'navigation.dart';
 
+class otpscreen extends StatefulWidget{
 
-class loginscreen extends StatefulWidget {
-
-  const loginscreen({Key? key}) : super(key: key);
+  String verificationid;
+  otpscreen({super.key,required this.verificationid});
 
   @override
-  State<loginscreen> createState() => _loginscreenState();
-
-
+  State<otpscreen> createState() => _otpscreenState();
 }
 
-class _loginscreenState extends State<loginscreen> {
+class _otpscreenState extends State<otpscreen> {
 
-
-  TextEditingController phoneController = TextEditingController();
-
+  TextEditingController otpcontroller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -67,24 +60,24 @@ class _loginscreenState extends State<loginscreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                        TextField(
-                        controller: phoneController,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
+                        controller: otpcontroller,
+                        decoration: const InputDecoration(
                           enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.purple),
                             borderRadius: BorderRadius.all(Radius.circular(20)),
+                            borderSide: BorderSide(color: Colors.purple),
                           ),
                           focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.purple),
                               borderRadius: BorderRadius.all(
                                   Radius.circular(20))),
-                          prefixIcon: Icon(Icons.person_2_rounded,
+                          prefixIcon: Icon(Icons.lock_open,
                             color: Colors.purple,),
-                          hintText: "Mobile No",
+                          border: InputBorder.none,
+                          hintText: "OTP",
                         ),
-                        maxLength: 13,
                       ),
-                      const SizedBox(height: 30,),
+                      const
+                      SizedBox(height: 30,),
                       Container(
                         child: CupertinoButton(
                           padding: EdgeInsets.zero,
@@ -105,27 +98,16 @@ class _loginscreenState extends State<loginscreen> {
                             ),
                           ),
                           onPressed: () async {
-                            try {
-                              await FirebaseAuth.instance.verifyPhoneNumber(
-                                  verificationCompleted: (
-                                      PhoneAuthCredential credential) {},
-                                  verificationFailed: (
-                                      FirebaseAuthException ex) {},
-                                  codeSent: (String verificationId,
-                                      int? resendtoken) {
-                                    Navigator.push(context,
-                                        MaterialPageRoute(builder: (context) =>
-                                            otpscreen(
-                                                verificationid: verificationId)));
-                                  },
-                                  codeAutoRetrievalTimeout: (
-                                      String verificationID) {},
-                                  phoneNumber: phoneController.text.toString());
+                            try{
+                              PhoneAuthCredential crediantal = await PhoneAuthProvider.credential(verificationId: widget.verificationid, smsCode: otpcontroller.text.toString());
+                              FirebaseAuth.instance.signInWithCredential(crediantal).then((value){
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>NavigationMenu()));
+                              });
                             }catch(e){
                               log(e.toString());
                             }
-                            String vrt="123";
-                            },
+
+                          },
                         ),
                       ),
                     ],
