@@ -1,7 +1,10 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:healthifyd/util.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -13,13 +16,15 @@ class profile extends StatefulWidget {
 }
 
 class _profileState extends State<profile> {
-  Uint8List? _image;
+  // Uint8List? _image;
+  //
+  // void selectimage() async {
+  //   Uint8List img = await pickimage(ImageSource.gallery);
+  //   setState(() {});
+  //   _image = img;
+  // }
 
-  void selectimage() async {
-    Uint8List img = await pickimage(ImageSource.gallery);
-    setState(() {});
-    _image = img;
-  }
+  final controller = Get.put(ImagePickerController());
 
   @override
   Widget build(BuildContext context) {
@@ -32,19 +37,18 @@ class _profileState extends State<profile> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Container(
-                  height: 100,
-                  width: 100,
-                  child: Stack(children: [
-                    _image != null
-                        ? CircleAvatar(
-                            radius: 64,
-                            backgroundImage: MemoryImage(_image!),
-                          )
-                        : ClipOval(
-                            child: Image.asset("assets/images/admin.jpg"))
-                  ]),
-                ),
+                Obx(() {
+                  return Container(
+                      height: 100,
+                      width: 100,
+                      child: controller.image.value.path == ''
+                          ? ClipOval(
+                          child: Image.asset("assets/images/admin.jpg"))
+                  : ClipOval(
+                        child: Image.network(
+                            controller.image.value.path),
+                      ));
+                }),
                 GestureDetector(
                   child: const Text(
                     "Edit Photo",
@@ -53,7 +57,9 @@ class _profileState extends State<profile> {
                       color: Colors.blue,
                     ),
                   ),
-                  onTap: selectimage,
+                  onTap: (){
+                    controller.pickimage();
+                  },
                 ),
                 SizedBox(
                   height: 20,
