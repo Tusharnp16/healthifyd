@@ -42,7 +42,9 @@ dependencies:
   firebase_storage:
   cloud_firestore:
   get:
-
+  intl_phone_number_input: ^0.7.4
+  intl_phone_field : ^3.2.0
+  lottie : ^3.1.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -67,6 +69,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
+    - assets/animate/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -6,25 +6,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:healthifyd/home.dart';
 import 'package:healthifyd/otpscreen.dart';
-
+import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:lottie/lottie.dart';
 import 'navigation.dart';
 
-
 class loginscreen extends StatefulWidget {
-
   const loginscreen({Key? key}) : super(key: key);
 
   @override
   State<loginscreen> createState() => _loginscreenState();
-
-
 }
 
 class _loginscreenState extends State<loginscreen> {
-
-
-  TextEditingController phoneController = TextEditingController();
-
+  late String _phoneNumber;
 
   @override
   Widget build(BuildContext context) {
@@ -36,25 +30,49 @@ class _loginscreenState extends State<loginscreen> {
             height: double.infinity,
             width: double.infinity,
             decoration: const BoxDecoration(
-              gradient: LinearGradient(colors: [
-                Color(0xffe056fd),
-                Color(0xff9402b6),
-              ]),
+              gradient: LinearGradient(
+                colors: [
+                  Color.fromARGB(246, 138, 246, 255),
+                  Color.fromARGB(246, 105, 185, 207),
+                ],
+              ),
             ),
-            child: const Padding(padding: EdgeInsets.only(top: 60.0, left: 22),
-              child: Text("Welcome Doctor !!,\nSign In",
-                style: TextStyle(
-                    fontSize: 30,
-                    color: Colors.black87,
-                    fontWeight: FontWeight.bold),
-              ),),),
+            child: Padding(
+              padding: EdgeInsets.only(left: 22),
+              child: Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(
+                        left: 22,bottom: 450),
+                    child: Text(
+                      "Welcome Back !!,\nSign In",
+                      style: TextStyle(
+                          fontSize: 30,
+                          color: Colors.black87,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Container(
+                   child: Padding(
+                      padding: EdgeInsets.only(
+                          right: 150,bottom: 450),
+                    child: Lottie.asset('assets/animate/logind_1.json',
+                        fit: BoxFit.cover, height: 150, width: 150),
+                    )
+                  ),
+                ],
+              ),
+            ),
+          ),
           Padding(
-            padding: const EdgeInsets.only(top: 200.0),
+            padding: const EdgeInsets.only(top: 250
+                ),
             child: Container(
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(40),
-                    topRight: Radius.circular(40)),
+                  topLeft: Radius.circular(40),
+                  topRight: Radius.circular(40),
+                ),
                 color: Colors.white,
               ),
               height: double.infinity,
@@ -66,25 +84,24 @@ class _loginscreenState extends State<loginscreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                       TextField(
-                        controller: phoneController,
-                        keyboardType: TextInputType.number,
+                      IntlPhoneField(
                         decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.purple),
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                          labelText: 'Phone Number',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25.0),
+                            borderSide: BorderSide(
+                              color: Colors.lightBlue,
+                            ),
                           ),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.purple),
-                              borderRadius: BorderRadius.all(
-                                  Radius.circular(20))),
-                          prefixIcon: Icon(Icons.person_2_rounded,
-                            color: Colors.purple,),
-                          hintText: "Mobile No",
                         ),
-                        maxLength: 13,
+                        initialCountryCode: 'IN',
+                        onChanged: (phone) {
+                          _phoneNumber = phone.completeNumber ?? '';
+                        },
                       ),
-                      const SizedBox(height: 30,),
+                      const SizedBox(
+                        height: 30,
+                      ),
                       Container(
                         child: CupertinoButton(
                           padding: EdgeInsets.zero,
@@ -93,7 +110,11 @@ class _loginscreenState extends State<loginscreen> {
                             width: double.infinity,
                             height: 40,
                             decoration: BoxDecoration(
-                              color: Colors.purpleAccent,
+                              gradient: LinearGradient(colors: [
+                                Color.fromARGB(246, 138, 246, 255),
+                                Color.fromARGB(246, 207, 88, 80),
+                                Color.fromARGB(246, 105, 185, 207),
+                              ]),
                               borderRadius: BorderRadius.circular(37),
                             ),
                             child: const Text(
@@ -107,25 +128,28 @@ class _loginscreenState extends State<loginscreen> {
                           onPressed: () async {
                             try {
                               await FirebaseAuth.instance.verifyPhoneNumber(
-                                  verificationCompleted: (
-                                      PhoneAuthCredential credential) {},
-                                  verificationFailed: (
-                                      FirebaseAuthException ex) {},
-                                  codeSent: (String verificationId,
-                                      int? resendtoken) {
-                                    Navigator.push(context,
-                                        MaterialPageRoute(builder: (context) =>
-                                            otpscreen(
-                                                verificationid: verificationId)));
-                                  },
-                                  codeAutoRetrievalTimeout: (
-                                      String verificationID) {},
-                                  phoneNumber: phoneController.text.toString());
-                            }catch(e){
+                                verificationCompleted:
+                                    (PhoneAuthCredential credential) {},
+                                verificationFailed:
+                                    (FirebaseAuthException ex) {},
+                                codeSent:
+                                    (String verificationId, int? resendtoken) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => otpscreen(
+                                          verificationid: verificationId),
+                                    ),
+                                  );
+                                },
+                                codeAutoRetrievalTimeout:
+                                    (String verificationID) {},
+                                phoneNumber: _phoneNumber,
+                              );
+                            } catch (e) {
                               log(e.toString());
                             }
-                            String vrt="123";
-                            },
+                          },
                         ),
                       ),
                     ],

@@ -1,6 +1,8 @@
+import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -16,6 +18,31 @@ class profile extends StatefulWidget {
 }
 
 class _profileState extends State<profile> {
+  TextEditingController namecontrolletr = TextEditingController();
+  TextEditingController gendercontroller = TextEditingController();
+  TextEditingController mobilenocontroller = TextEditingController();
+  TextEditingController emailidcontroller = TextEditingController();
+  TextEditingController specialistcontroller = TextEditingController();
+  TextEditingController hospitalcontroller = TextEditingController();
+
+  adddatatofirebase(String name,String gender,String mobile,String Email,String Specialist,String Hospital) async{
+    if(name == "" && gender == "" && gender == "" && mobile == "" && Email == "" && Specialist == "" && Hospital == ""){
+      log("Field is Empty");
+    }
+    else{
+      FirebaseFirestore.instance.collection("Users").doc(mobile).set({
+        "Name":name,
+        "Gender":gender,
+        "Mobile":mobile,
+        "Email":Email,
+        "Specialist":Specialist,
+        "Hospital":Hospital
+      }).then((value) => log("Data Inserted"));
+    }
+  }
+
+
+
   // Uint8List? _image;
   //
   // void selectimage() async {
@@ -64,8 +91,9 @@ class _profileState extends State<profile> {
                 SizedBox(
                   height: 20,
                 ),
-                const TextField(
-                  decoration: InputDecoration(
+                 TextField(
+                  controller: namecontrolletr,
+                  decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.purple),
                       borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -83,8 +111,9 @@ class _profileState extends State<profile> {
                 SizedBox(
                   height: 10,
                 ),
-                const TextField(
-                  decoration: InputDecoration(
+                 TextField(
+                  controller: gendercontroller,
+                  decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.purple),
                       borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -102,8 +131,9 @@ class _profileState extends State<profile> {
                 SizedBox(
                   height: 10,
                 ),
-                const TextField(
-                  decoration: InputDecoration(
+                 TextField(
+                   controller: mobilenocontroller,
+                  decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.purple),
                       borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -121,8 +151,9 @@ class _profileState extends State<profile> {
                 SizedBox(
                   height: 10,
                 ),
-                const TextField(
-                  decoration: InputDecoration(
+                 TextField(
+                   controller: emailidcontroller,
+                  decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.purple),
                       borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -140,8 +171,9 @@ class _profileState extends State<profile> {
                 SizedBox(
                   height: 10,
                 ),
-                const TextField(
-                  decoration: InputDecoration(
+                 TextField(
+                   controller: specialistcontroller,
+                  decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.purple),
                       borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -159,8 +191,9 @@ class _profileState extends State<profile> {
                 SizedBox(
                   height: 10,
                 ),
-                const TextField(
-                  decoration: InputDecoration(
+                 TextField(
+                   controller: hospitalcontroller,
+                  decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.purple),
                       borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -197,7 +230,8 @@ class _profileState extends State<profile> {
                     ),
                   ),
                   onPressed: () {
-                    controller.uploadImageToFirebase();
+             //       controller.uploadImageToFirebase();
+                    adddatatofirebase(namecontrolletr.text.toString(), gendercontroller.text.toString(), mobilenocontroller.text.toString(), emailidcontroller.text.toString(), specialistcontroller.text.toString(), hospitalcontroller.text.toString());
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => NavigationMenu()),
