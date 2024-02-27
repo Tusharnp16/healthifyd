@@ -24,63 +24,57 @@ class _loginscreenState extends State<loginscreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Stack(
-        children: [
-          Container(
-            height: double.infinity,
-            width: double.infinity,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color.fromARGB(246, 138, 246, 255),
-                  Color.fromARGB(246, 105, 185, 207),
-                ],
-              ),
-            ),
-            child: Padding(
-              padding: EdgeInsets.only(left: 22),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(
-                        left: 22,bottom: 450),
-                    child: Text(
-                      "Welcome Back !!,\nSign In",
-                      style: TextStyle(
-                          fontSize: 30,
-                          color: Colors.black87,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Container(
-                   child: Padding(
-                      padding: EdgeInsets.only(
-                          right: 150,bottom: 450),
-                    child: Lottie.asset('assets/animate/logind_1.json',
-                        fit: BoxFit.cover, height: 150, width: 150),
-                    )
-                  ),
-                ],
-              ),
-            ),
+      body: Container(
+        height: double.infinity,
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color.fromARGB(240, 37, 166, 255),
+              Color.fromARGB(240, 18, 103, 122),
+              // Color.fromARGB(240, 27, 124, 196),
+              // Color.fromARGB(240, 22, 95, 141),
+              // Color.fromARGB(246, 105, 185, 207),
+
+
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 250
-                ),
-            child: Container(
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(40),
-                  topRight: Radius.circular(40),
-                ),
-                color: Colors.white,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(children: [
+            Padding(padding: EdgeInsets.only(left:50)),
+            Text(
+              "Welcome Back !!,\nSign In",
+              style: TextStyle(
+                fontSize: 30,
+                color: Colors.black87,
+                fontWeight: FontWeight.bold,
               ),
-              height: double.infinity,
-              width: double.infinity,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 18.0, right: 18),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 40
+            ),
+            Lottie.asset(
+              'assets/animate/logind.json',
+              fit: BoxFit.cover,
+              height:300,
+              width: 250,
+            ),
+            ],),
+            SizedBox(height: 50), // Adjust spacing
+            Expanded(
+              child: Container(
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(40),
+                    topRight: Radius.circular(40),
+                  ),
+                  color: Colors.white,
+                ),
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 30, left: 8, right: 8),
+                  padding: const EdgeInsets.all(18.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -102,54 +96,45 @@ class _loginscreenState extends State<loginscreen> {
                       const SizedBox(
                         height: 30,
                       ),
-                      Container(
-                        child: CupertinoButton(
-                          padding: EdgeInsets.zero,
-                          child: Container(
-                            alignment: Alignment.center,
-                            width: double.infinity,
-                            height: 40,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(colors: [
-                                Color.fromARGB(246, 138, 246, 255),
-                                Color.fromARGB(246, 207, 88, 80),
-                                Color.fromARGB(246, 105, 185, 207),
-                              ]),
-                              borderRadius: BorderRadius.circular(37),
-                            ),
-                            child: const Text(
-                              "Continue",
-                              style: TextStyle(
-                                color: Colors.black87,
-                                fontWeight: FontWeight.w700,
-                              ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          try {
+                            await FirebaseAuth.instance.verifyPhoneNumber(
+                              verificationCompleted:
+                                  (PhoneAuthCredential credential) {},
+                              verificationFailed:
+                                  (FirebaseAuthException ex) {},
+                              codeSent: (String verificationId, int? resendtoken) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => otpscreen(
+                                        verificationid: verificationId),
+                                  ),
+                                );
+                              },
+                              codeAutoRetrievalTimeout: (String verificationID) {},
+                              phoneNumber: _phoneNumber,
+                            );
+                          } catch (e) {
+                            log(e.toString());
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          primary: Color.fromARGB(246, 138, 246, 255),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(37),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 15),
+                          child: Text(
+                            "Continue",
+                            style: TextStyle(
+                              color: Colors.black87,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
-                          onPressed: () async {
-                            try {
-                              await FirebaseAuth.instance.verifyPhoneNumber(
-                                verificationCompleted:
-                                    (PhoneAuthCredential credential) {},
-                                verificationFailed:
-                                    (FirebaseAuthException ex) {},
-                                codeSent:
-                                    (String verificationId, int? resendtoken) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => otpscreen(
-                                          verificationid: verificationId),
-                                    ),
-                                  );
-                                },
-                                codeAutoRetrievalTimeout:
-                                    (String verificationID) {},
-                                phoneNumber: _phoneNumber,
-                              );
-                            } catch (e) {
-                              log(e.toString());
-                            }
-                          },
                         ),
                       ),
                     ],
@@ -157,8 +142,8 @@ class _loginscreenState extends State<loginscreen> {
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
