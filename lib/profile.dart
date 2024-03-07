@@ -65,13 +65,13 @@ class _profileState extends State<profile> {
                     width: 100,
                     child: controller.image.value.path == ''
                         ? ClipOval(
-                      child: Image.asset("assets/images/admin.jpg"),
-                    )
+                            child: Image.asset("assets/images/admin.jpg"),
+                          )
                         : ClipOval(
-                      child: Image.network(
-                        controller.image.value.path,
-                      ),
-                    ),
+                            child: Image.network(
+                              controller.image.value.path,
+                            ),
+                          ),
                   );
                 }),
                 GestureDetector(
@@ -93,15 +93,17 @@ class _profileState extends State<profile> {
                   controller: nameController,
                   decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.purple),
+                      borderSide:
+                          BorderSide(color: Color.fromARGB(220, 59, 206, 255)),
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                     ),
                     focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.purple),
+                        borderSide: BorderSide(
+                            color: Color.fromARGB(220, 59, 206, 255)),
                         borderRadius: BorderRadius.all(Radius.circular(20))),
                     prefixIcon: Icon(
                       Icons.person,
-                      color: Colors.purple,
+                      color: Color.fromARGB(220, 59, 206, 255),
                     ),
                     hintText: "Name",
                   ),
@@ -171,15 +173,17 @@ class _profileState extends State<profile> {
                   controller: mobileNoController,
                   decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.purple),
+                      borderSide:
+                          BorderSide(color: Color.fromARGB(220, 59, 206, 255)),
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                     ),
                     focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.purple),
+                        borderSide: BorderSide(
+                            color: Color.fromARGB(220, 59, 206, 255)),
                         borderRadius: BorderRadius.all(Radius.circular(20))),
                     prefixIcon: Icon(
                       Icons.phone,
-                      color: Colors.purple,
+                      color:Color.fromARGB(220, 59, 206, 255),
                     ),
                     hintText: "Mobile No",
                   ),
@@ -191,15 +195,17 @@ class _profileState extends State<profile> {
                   controller: emailIdController,
                   decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.purple),
+                      borderSide:
+                          BorderSide(color: Color.fromARGB(220, 59, 206, 255)),
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                     ),
                     focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.purple),
+                        borderSide: BorderSide(
+                            color: Color.fromARGB(220, 59, 206, 255)),
                         borderRadius: BorderRadius.all(Radius.circular(20))),
                     prefixIcon: Icon(
                       Icons.email,
-                      color: Colors.purple,
+                      color: Color.fromARGB(220, 59, 206, 255),
                     ),
                     hintText: "Email Id",
                   ),
@@ -211,15 +217,17 @@ class _profileState extends State<profile> {
                   controller: specialistController,
                   decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.purple),
+                      borderSide:
+                          BorderSide(color: Color.fromARGB(220, 59, 206, 255)),
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                     ),
                     focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.purple),
+                        borderSide: BorderSide(
+                            color: Color.fromARGB(220, 59, 206, 255)),
                         borderRadius: BorderRadius.all(Radius.circular(20))),
                     prefixIcon: Icon(
                       Icons.local_hospital,
-                      color: Colors.purple,
+                      color: Color.fromARGB(220, 59, 206, 255),
                     ),
                     hintText: "Specialist",
                   ),
@@ -231,15 +239,17 @@ class _profileState extends State<profile> {
                   controller: hospitalController,
                   decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.purple),
+                      borderSide:
+                          BorderSide(color: Color.fromARGB(220, 59, 206, 255)),
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                     ),
                     focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.purple),
+                        borderSide: BorderSide(
+                            color: Color.fromARGB(220, 59, 206, 255)),
                         borderRadius: BorderRadius.all(Radius.circular(20))),
                     prefixIcon: Icon(
                       Icons.local_hospital_outlined,
-                      color: Colors.purple,
+                      color: Color.fromARGB(220, 59, 206, 255),
                     ),
                     hintText: "Hospital",
                   ),
@@ -254,7 +264,7 @@ class _profileState extends State<profile> {
                     width: double.infinity,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: Colors.purpleAccent,
+                      color: Color.fromARGB(220, 59, 206, 255),
                       borderRadius: BorderRadius.circular(37),
                     ),
                     child: const Text(
