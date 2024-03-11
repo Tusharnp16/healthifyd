@@ -1,38 +1,46 @@
 import 'dart:developer';
 import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:healthifyd/util.dart';
 import 'package:image_picker/image_picker.dart';
-
 import 'navigation.dart';
 
-class profile extends StatefulWidget {
+class Profile extends StatefulWidget {
   @override
-  State<profile> createState() => _profileState();
+  State<Profile> createState() => _ProfileState();
 }
 
-class _profileState extends State<profile> {
+class _ProfileState extends State<Profile> {
   TextEditingController nameController = TextEditingController();
   String gender = ''; // Store the selected gender
   TextEditingController mobileNoController = TextEditingController();
   TextEditingController emailIdController = TextEditingController();
   TextEditingController specialistController = TextEditingController();
   TextEditingController hospitalController = TextEditingController();
+  String imagePath = ''; // Store the path of the selected image
 
-  addDataToFirebase(String name, String gender, String mobile, String email,
-      String specialist, String hospital) async {
-    if (name == "" ||
-        gender == "" ||
-        mobile == "" ||
-        email == "" ||
-        specialist == "" ||
-        hospital == "") {
+  // Function to pick an image from gallery
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
+      setState(() {
+        imagePath = pickedImage.path!;
+      });
+    }
+  }
+
+  // Function to add data to Firebase
+  void addDataToFirebase(String name, String gender, String mobile, String email,
+      String specialist, String hospital, String imagePath) async {
+    if (name.isEmpty ||
+        gender.isEmpty ||
+        mobile.isEmpty ||
+        email.isEmpty ||
+        specialist.isEmpty ||
+        hospital.isEmpty ||
+        imagePath.isEmpty) {
       log("Field is Empty");
     } else {
       FirebaseFirestore.instance.collection("Users").doc(mobile).set({
@@ -41,12 +49,11 @@ class _profileState extends State<profile> {
         "Mobile": mobile,
         "Email": email,
         "Specialist": specialist,
-        "Hospital": hospital
+        "Hospital": hospital,
+        "ProfileImage": imagePath, // Store image path in Firestore
       }).then((value) => log("Data Inserted"));
     }
   }
-
-  final controller = Get.put(ImagePickerController());
 
   @override
   Widget build(BuildContext context) {
@@ -59,32 +66,15 @@ class _profileState extends State<profile> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Obx(() {
-                  return Container(
+                GestureDetector(
+                  child: Container(
                     height: 100,
                     width: 100,
-                    child: controller.image.value.path == ''
-                        ? ClipOval(
-                            child: Image.asset("assets/images/admin.jpg"),
-                          )
-                        : ClipOval(
-                            child: Image.network(
-                              controller.image.value.path,
-                            ),
-                          ),
-                  );
-                }),
-                GestureDetector(
-                  child: const Text(
-                    "Edit Photo",
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.blue,
-                    ),
+                    child: imagePath.isEmpty
+                        ? Image.asset("assets/images/admin.jpg")
+                        : Image.network(imagePath),
                   ),
-                  onTap: () {
-                    controller.pickimage();
-                  },
+                  onTap: _pickImage,
                 ),
                 SizedBox(
                   height: 20,
@@ -94,7 +84,7 @@ class _profileState extends State<profile> {
                   decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderSide:
-                          BorderSide(color: Color.fromARGB(220, 59, 206, 255)),
+                      BorderSide(color: Color.fromARGB(220, 59, 206, 255)),
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                     ),
                     focusedBorder: OutlineInputBorder(
@@ -111,60 +101,85 @@ class _profileState extends State<profile> {
                 SizedBox(
                   height: 10,
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Gender",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
+                Container(
+                  // Gender selection container
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Color.fromARGB(220, 59, 206, 255),
+                      width: 2.0,
+                    ),
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.male_outlined,
+                        color: Colors.lightBlueAccent,
                       ),
-                    ),
-                    Row(
-                      children: [
-                        Radio<String>(
-                          value: 'Male',
-                          groupValue: gender,
-                          onChanged: (value) {
-                            setState(() {
-                              gender = value!;
-                            });
-                          },
-                        ),
-                        Text('Male'),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Radio<String>(
-                          value: 'Female',
-                          groupValue: gender,
-                          onChanged: (value) {
-                            setState(() {
-                              gender = value!;
-                            });
-                          },
-                        ),
-                        Text('Female'),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Radio<String>(
-                          value: 'Other',
-                          groupValue: gender,
-                          onChanged: (value) {
-                            setState(() {
-                              gender = value!;
-                            });
-                          },
-                        ),
-                        Text('Other'),
-                      ],
-                    ),
-                  ],
+                      SizedBox(width: 8),
+                      Row(
+                        children: [
+                          Radio<String>(
+                            value: 'Male',
+                            groupValue: gender,
+                            onChanged: (value) {
+                              setState(() {
+                                gender = value!;
+                              });
+                            },
+                            activeColor: Color.fromARGB(220, 59, 206, 255),
+                          ),
+                          Text(
+                            'Male',
+                            style: TextStyle(
+                              color: Color.fromARGB(220, 59, 206, 255),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Radio<String>(
+                            value: 'Female',
+                            groupValue: gender,
+                            onChanged: (value) {
+                              setState(() {
+                                gender = value!;
+                              });
+                            },
+                            activeColor: Color.fromARGB(220, 59, 206, 255),
+                          ),
+                          Text(
+                            'Female',
+                            style: TextStyle(
+                              color: Color.fromARGB(220, 59, 206, 255),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Radio<String>(
+                            value: 'Other',
+                            groupValue: gender,
+                            onChanged: (value) {
+                              setState(() {
+                                gender = value!;
+                              });
+                            },
+                            activeColor: Color.fromARGB(220, 59, 206, 255),
+                          ),
+                          Text(
+                            'Other',
+                            style: TextStyle(
+                              color: Color.fromARGB(220, 59, 206, 255),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(
                   height: 10,
@@ -174,7 +189,7 @@ class _profileState extends State<profile> {
                   decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderSide:
-                          BorderSide(color: Color.fromARGB(220, 59, 206, 255)),
+                      BorderSide(color: Color.fromARGB(220, 59, 206, 255)),
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                     ),
                     focusedBorder: OutlineInputBorder(
@@ -183,7 +198,7 @@ class _profileState extends State<profile> {
                         borderRadius: BorderRadius.all(Radius.circular(20))),
                     prefixIcon: Icon(
                       Icons.phone,
-                      color:Color.fromARGB(220, 59, 206, 255),
+                      color: Color.fromARGB(220, 59, 206, 255),
                     ),
                     hintText: "Mobile No",
                   ),
@@ -196,7 +211,7 @@ class _profileState extends State<profile> {
                   decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderSide:
-                          BorderSide(color: Color.fromARGB(220, 59, 206, 255)),
+                      BorderSide(color: Color.fromARGB(220, 59, 206, 255)),
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                     ),
                     focusedBorder: OutlineInputBorder(
@@ -218,7 +233,7 @@ class _profileState extends State<profile> {
                   decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderSide:
-                          BorderSide(color: Color.fromARGB(220, 59, 206, 255)),
+                      BorderSide(color: Color.fromARGB(220, 59, 206, 255)),
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                     ),
                     focusedBorder: OutlineInputBorder(
@@ -240,7 +255,7 @@ class _profileState extends State<profile> {
                   decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderSide:
-                          BorderSide(color: Color.fromARGB(220, 59, 206, 255)),
+                      BorderSide(color: Color.fromARGB(220, 59, 206, 255)),
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                     ),
                     focusedBorder: OutlineInputBorder(
@@ -283,6 +298,7 @@ class _profileState extends State<profile> {
                       emailIdController.text.toString(),
                       specialistController.text.toString(),
                       hospitalController.text.toString(),
+                      imagePath,
                     );
                     Navigator.push(
                       context,

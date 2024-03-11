@@ -16,7 +16,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
   List<Widget> widgetOptions = <Widget>[
     home(),
     appoiment(),
-    profile(),
+    Profile(),
   ];
 
   @override
