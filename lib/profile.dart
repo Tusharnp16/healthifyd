@@ -1,39 +1,54 @@
-import 'dart:developer';
-import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
+// profile.dart
+
+import 'dart:math' as math;
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
-import 'navigation.dart';
+import 'navigation.dart'; // Import your NavigationMenu file
 
 class Profile extends StatefulWidget {
+  final String? phoneNumber; // Define phoneNumber as a parameter
+  Profile({Key? key, this.phoneNumber}) : super(key: key);
+
   @override
   State<Profile> createState() => _ProfileState();
 }
 
 class _ProfileState extends State<Profile> {
   TextEditingController nameController = TextEditingController();
-  String gender = ''; // Store the selected gender
+  String gender = '';
   TextEditingController mobileNoController = TextEditingController();
   TextEditingController emailIdController = TextEditingController();
   TextEditingController specialistController = TextEditingController();
   TextEditingController hospitalController = TextEditingController();
-  String imagePath = ''; // Store the path of the selected image
+  String imagePath = '';
 
-  // Function to pick an image from gallery
-  Future<void> _pickImage() async {
-    final picker = ImagePicker();
-    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
-    if (pickedImage != null) {
-      setState(() {
-        imagePath = pickedImage.path!;
-      });
+  @override
+  void initState() {
+    super.initState();
+    // Fill the phone number field if provided
+    if (widget.phoneNumber != null) {
+      mobileNoController.text = widget.phoneNumber!;
     }
   }
 
-  // Function to add data to Firebase
-  void addDataToFirebase(String name, String gender, String mobile, String email,
-      String specialist, String hospital, String imagePath) async {
+  String generateDoctorId() {
+    // Generate a unique doctor ID using a random number
+    int randomNumber = math.Random().nextInt(999999);
+    return 'DOC$randomNumber'; // Prefixing with 'DOC' to indicate Doctor
+  }
+
+  void addDataToFirebase(
+      String name,
+      String gender,
+      String mobile,
+      String email,
+      String specialist,
+      String hospital,
+      String imagePath,
+      ) async {
     if (name.isEmpty ||
         gender.isEmpty ||
         mobile.isEmpty ||
@@ -41,7 +56,7 @@ class _ProfileState extends State<Profile> {
         specialist.isEmpty ||
         hospital.isEmpty ||
         imagePath.isEmpty) {
-      log("Field is Empty");
+      print("Field is Empty");
     } else {
       FirebaseFirestore.instance.collection("Users").doc(mobile).set({
         "Name": name,
@@ -50,14 +65,33 @@ class _ProfileState extends State<Profile> {
         "Email": email,
         "Specialist": specialist,
         "Hospital": hospital,
-        "ProfileImage": imagePath, // Store image path in Firestore
-      }).then((value) => log("Data Inserted"));
+        "DoctorId": generateDoctorId(),
+        "ProfileImage": imagePath,
+      }).then((value) => print("Data Inserted"));
+    }
+  }
+
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      // Set the imagePath to the picked image file path
+      setState(() {
+        imagePath = pickedFile.path;
+      });
+    } else {
+      // Handle case when the user cancels image picking
+      print('No image selected.');
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Profile'),
+      ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -80,11 +114,34 @@ class _ProfileState extends State<Profile> {
                   height: 20,
                 ),
                 TextField(
-                  controller: nameController,
-                  decoration: const InputDecoration(
+                  readOnly: true,
+                  controller: TextEditingController(text: generateDoctorId()),
+                  decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
-                      borderSide:
-                      BorderSide(color: Color.fromARGB(220, 59, 206, 255)),
+                      borderSide: BorderSide(
+                          color: Color.fromARGB(220, 59, 206, 255)),
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Color.fromARGB(220, 59, 206, 255)),
+                        borderRadius: BorderRadius.all(Radius.circular(20))),
+                    prefixIcon: Icon(
+                      Icons.local_hospital_outlined,
+                      color: Color.fromARGB(220, 59, 206, 255),
+                    ),
+                    hintText: "Doctor ID",
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                TextField(
+                  controller: nameController,
+                  decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Color.fromARGB(220, 59, 206, 255)),
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                     ),
                     focusedBorder: OutlineInputBorder(
@@ -102,7 +159,7 @@ class _ProfileState extends State<Profile> {
                   height: 10,
                 ),
                 Container(
-                  // Gender selection container
+                  padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                   decoration: BoxDecoration(
                     border: Border.all(
                       color: Color.fromARGB(220, 59, 206, 255),
@@ -110,7 +167,6 @@ class _ProfileState extends State<Profile> {
                     ),
                     borderRadius: BorderRadius.circular(20.0),
                   ),
-                  padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                   child: Row(
                     children: [
                       Icon(
@@ -186,10 +242,10 @@ class _ProfileState extends State<Profile> {
                 ),
                 TextField(
                   controller: mobileNoController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
-                      borderSide:
-                      BorderSide(color: Color.fromARGB(220, 59, 206, 255)),
+                      borderSide: BorderSide(
+                          color: Color.fromARGB(220, 59, 206, 255)),
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                     ),
                     focusedBorder: OutlineInputBorder(
@@ -208,10 +264,10 @@ class _ProfileState extends State<Profile> {
                 ),
                 TextField(
                   controller: emailIdController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
-                      borderSide:
-                      BorderSide(color: Color.fromARGB(220, 59, 206, 255)),
+                      borderSide: BorderSide(
+                          color: Color.fromARGB(220, 59, 206, 255)),
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                     ),
                     focusedBorder: OutlineInputBorder(
@@ -230,10 +286,10 @@ class _ProfileState extends State<Profile> {
                 ),
                 TextField(
                   controller: specialistController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
-                      borderSide:
-                      BorderSide(color: Color.fromARGB(220, 59, 206, 255)),
+                      borderSide: BorderSide(
+                          color: Color.fromARGB(220, 59, 206, 255)),
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                     ),
                     focusedBorder: OutlineInputBorder(
@@ -252,10 +308,10 @@ class _ProfileState extends State<Profile> {
                 ),
                 TextField(
                   controller: hospitalController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
-                      borderSide:
-                      BorderSide(color: Color.fromARGB(220, 59, 206, 255)),
+                      borderSide: BorderSide(
+                          color: Color.fromARGB(220, 59, 206, 255)),
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                     ),
                     focusedBorder: OutlineInputBorder(
