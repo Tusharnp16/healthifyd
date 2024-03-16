@@ -2,6 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:healthifyd/profile.dart';
+import 'package:healthifyd/trsting.dart';
+
+import 'package:healthifyd/updatenn.dart';
 import 'appoiment.dart';
 import 'home.dart';
 
@@ -16,7 +19,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
   List<Widget> widgetOptions = <Widget>[
     home(),
     appoiment(),
-    profile(),
+    UserPage(userId: "Tonybhai"),
   ];
 
   @override

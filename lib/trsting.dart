@@ -1,74 +1,53 @@
-import 'dart:developer';
-import 'dart:io';
-import 'dart:typed_data';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:healthifyd/Userrepository.dart';
-import 'package:healthifyd/usermodel.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:healthifyd/combine.dart';
+import 'package:healthifyd/profile.dart';
 import 'package:healthifyd/util.dart';
-import 'package:image_picker/image_picker.dart';
 
 import 'navigation.dart';
 
-class profile extends StatefulWidget {
-  @override
-  State<profile> createState() => _profileState();
-}
+class UserPage extends StatelessWidget {
+  final String userId;
 
-class _profileState extends State<profile> {
-
-  final userRepo = Get.put(UserRepository());
-
-  TextEditingController namecontrolletr = TextEditingController();
-  TextEditingController gendercontroller = TextEditingController();
-  TextEditingController mobilenocontroller = TextEditingController();
-  TextEditingController emailidcontroller = TextEditingController();
-  TextEditingController specialistcontroller = TextEditingController();
-  TextEditingController hospitalcontroller = TextEditingController();
-
-  Future<void> createuser(usermodel user) async {
-   await userRepo.createuser(user);
-  }
-
-  // adddatatofirebase(String name,String gender,String mobile,String Email,String Specialist,String Hospital) async{
-  //   if(name == "" && gender == "" && gender == "" && mobile == "" && Email == "" && Specialist == "" && Hospital == ""){
-  //     log("Field is Empty");
-  //   }
-  //   else{
-  //     FirebaseFirestore.instance.collection("Doctors").doc(mobile).set({
-  //       "Name":name,
-  //       "Gender":gender,
-  //       "Mobile":mobile,
-  //       "Email":Email,
-  //       "Specialist":Specialist,
-  //       "Hospital":Hospital
-  //     }).then((value) => log("Data Inserted"));
-  //   }
-  // }
-
-
-
-  // Uint8List? _image;
-  //
-  // void selectimage() async {
-  //   Uint8List img = await pickimage(ImageSource.gallery);
-  //   setState(() {});
-  //   _image = img;
-  // }
-
+  UserPage({required this.userId});
   final controller = Get.put(ImagePickerController());
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SingleChildScrollView(
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection('Users')
+            .doc(userId) // Assuming 'users' is the collection name
+            .snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          }
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator(); // Or any other loading indicator
+          }
+
+          if (!snapshot.hasData || snapshot.data!.data() == null) {
+            return Text('No data found for this user.');
+          }
+
+          // Explicitly cast the data to Map<String, dynamic>
+          var userData = snapshot.data!.data() as Map<String, dynamic>;
+
+          // Access user data
+          var name = userData['Name'] as String?;
+          var email = userData['Email'] as String?;
+          var mobile = userData['Mobile'] as String?;
+          var gender = userData['Gender'] as String?;
+          var specialist = userData['Specialist'] as String?;
+          var hospital = userData['Mobile'] as String?;
+
+          return SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -79,8 +58,9 @@ class _profileState extends State<profile> {
                       width: 100,
                       child: controller.image.value.path == ''
                           ? ClipOval(
-                          child: Image.asset("assets/images/admin.jpg"))
-                  : ClipOval(
+                          child: Image.asset(
+                              "assets/images/admin.jpg"))
+                          : ClipOval(
                         child: Image.network(
                             controller.image.value.path),
                       ));
@@ -93,23 +73,26 @@ class _profileState extends State<profile> {
                       color: Colors.blue,
                     ),
                   ),
-                  onTap: (){
+                  onTap: () {
                     controller.pickimage();
                   },
                 ),
                 SizedBox(
                   height: 20,
                 ),
-                 TextField(
-                  controller: namecontrolletr,
+                TextFormField(
+                  readOnly: true,
+                  initialValue: name,
                   decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.purple),
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      borderRadius:
+                      BorderRadius.all(Radius.circular(20)),
                     ),
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.purple),
-                        borderRadius: BorderRadius.all(Radius.circular(20))),
+                        borderRadius:
+                        BorderRadius.all(Radius.circular(20))),
                     prefixIcon: Icon(
                       Icons.person_2_rounded,
                       color: Colors.purple,
@@ -120,38 +103,42 @@ class _profileState extends State<profile> {
                 SizedBox(
                   height: 10,
                 ),
-                 TextField(
-                  controller: gendercontroller,
+                TextFormField(
+                  initialValue: gender,
+                 readOnly: true,
                   decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.purple),
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      borderRadius:
+                      BorderRadius.all(Radius.circular(20)),
                     ),
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.purple),
-                        borderRadius: BorderRadius.all(Radius.circular(20))),
+                        borderRadius:
+                        BorderRadius.all(Radius.circular(20))),
                     prefixIcon: Icon(
                       Icons.person_2_rounded,
                       color: Colors.purple,
                     ),
                     hintText: "Gender",
-
                   ),
-
                 ),
                 SizedBox(
                   height: 10,
                 ),
-                 TextField(
-                   controller: mobilenocontroller,
+                TextFormField(
+                  readOnly: true,
+                  initialValue: mobile,
                   decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.purple),
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      borderRadius:
+                      BorderRadius.all(Radius.circular(20)),
                     ),
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.purple),
-                        borderRadius: BorderRadius.all(Radius.circular(20))),
+                        borderRadius:
+                        BorderRadius.all(Radius.circular(20))),
                     prefixIcon: Icon(
                       Icons.person_2_rounded,
                       color: Colors.purple,
@@ -162,16 +149,19 @@ class _profileState extends State<profile> {
                 SizedBox(
                   height: 10,
                 ),
-                 TextField(
-                   controller: emailidcontroller,
+                TextFormField(
+                  readOnly: true,
+                  initialValue: email,
                   decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.purple),
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      borderRadius:
+                      BorderRadius.all(Radius.circular(20)),
                     ),
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.purple),
-                        borderRadius: BorderRadius.all(Radius.circular(20))),
+                        borderRadius:
+                        BorderRadius.all(Radius.circular(20))),
                     prefixIcon: Icon(
                       Icons.person_2_rounded,
                       color: Colors.purple,
@@ -182,16 +172,19 @@ class _profileState extends State<profile> {
                 SizedBox(
                   height: 10,
                 ),
-                 TextField(
-                   controller: specialistcontroller,
+                TextFormField(
+                  readOnly: true,
+                  initialValue: specialist,
                   decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.purple),
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      borderRadius:
+                      BorderRadius.all(Radius.circular(20)),
                     ),
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.purple),
-                        borderRadius: BorderRadius.all(Radius.circular(20))),
+                        borderRadius:
+                        BorderRadius.all(Radius.circular(20))),
                     prefixIcon: Icon(
                       Icons.person_2_rounded,
                       color: Colors.purple,
@@ -202,16 +195,19 @@ class _profileState extends State<profile> {
                 SizedBox(
                   height: 10,
                 ),
-                 TextField(
-                   controller: hospitalcontroller,
+                TextFormField(
+                  readOnly: true,
+                  initialValue: hospital,
                   decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.purple),
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      borderRadius:
+                      BorderRadius.all(Radius.circular(20)),
                     ),
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.purple),
-                        borderRadius: BorderRadius.all(Radius.circular(20))),
+                        borderRadius:
+                        BorderRadius.all(Radius.circular(20))),
                     prefixIcon: Icon(
                       Icons.person_2_rounded,
                       color: Colors.purple,
@@ -233,7 +229,7 @@ class _profileState extends State<profile> {
                       borderRadius: BorderRadius.circular(37),
                     ),
                     child: const Text(
-                      "Update",
+                      "Edit Profile",
                       style: TextStyle(
                         color: Colors.black87,
                         fontWeight: FontWeight.w700,
@@ -241,30 +237,17 @@ class _profileState extends State<profile> {
                     ),
                   ),
                   onPressed: () {
-
-                    final user = usermodel(
-                        mobile: mobilenocontroller.text.trim(),
-                        name: namecontrolletr.text.trim(),
-                        gender: gendercontroller.text.trim(),
-                        specialist: specialistcontroller.text.trim(),
-                        hospital: hospitalcontroller.text.trim(),
-                        email: emailidcontroller.text.trim());
-
-                    createuser(user);
-
-             //       controller.uploadImageToFirebase();
-                    //adddatatofirebase(namecontrolletr.text.toString(), gendercontroller.text.toString(), mobilenocontroller.text.toString(), emailidcontroller.text.toString(), specialistcontroller.text.toString(), hospitalcontroller.text.toString());
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => NavigationMenu()),
+                      MaterialPageRoute(
+                          builder: (context) => profile()),
                     );
                   },
-                  
                 ),
               ],
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }

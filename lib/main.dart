@@ -4,6 +4,10 @@ import 'package:healthifyd/appoiment.dart';
 import 'package:healthifyd/home.dart';
 import 'package:healthifyd/login.dart';
 import 'package:healthifyd/navigation.dart';
+import 'package:healthifyd/otpscreen.dart';
+
+import 'package:healthifyd/updatenn.dart';
+import 'package:healthifyd/profile.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,7 +34,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: loginscreen(),
+      home:  NavigationMenu(),
     );
   }
 }

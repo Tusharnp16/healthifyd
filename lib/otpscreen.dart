@@ -162,7 +162,7 @@ class _OTPScreenState extends State<OTPScreen> {
                             });
                           },
                           style: ElevatedButton.styleFrom(
-                            primary: Colors.transparent,
+                            backgroundColor: Colors.transparent,
                             elevation: 0, // Remove button elevation
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(37),
