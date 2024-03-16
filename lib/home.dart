@@ -216,6 +216,44 @@ class home extends StatelessWidget {
                           ),
                         ),
                         Divider(),
+                        Padding(
+                          padding: const EdgeInsets.all(2.0),
+                          child: Card(
+                            elevation: 10,
+                            child: Container(
+                              height: 190,
+                              width: double.infinity,
+                              decoration: const BoxDecoration(
+                                color: Colors.white54,
+                                borderRadius: BorderRadius.all(Radius.circular(15)),
+                              ),
+                              child:  Padding(
+                                padding: const EdgeInsets.all(3.0),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      height:140,
+                                      width: double.infinity,
+                                      child:
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(8.0),
+                                        child: SizedBox.fromSize(
+                                            size: Size.fromRadius(48), // Image radius
+                                            child: Image.asset("assets/images/lsgamount.jpg",fit: BoxFit.fill)
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(height: 2,),
+                                    const Expanded(child: Text("LSG get new sponsorship of whoping amount 699 CR from Healthify ",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),))
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),

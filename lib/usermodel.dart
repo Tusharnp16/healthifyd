@@ -9,6 +9,7 @@ class usermodel{
   final String? email;
   final String? hospital;
   final String? specialist;
+  final String imagePath;
 
   const usermodel({
    // this.id,
@@ -17,7 +18,8 @@ class usermodel{
     required this.gender,
     required this.specialist,
     required this.hospital,
-    required this.email
+    required this.email,
+    required this.imagePath
 });
 
   toJson(){
@@ -27,7 +29,8 @@ class usermodel{
       "Mobile":mobile,
       "Email":email,
       "Specialist":specialist,
-      "Hospital":hospital
+      "Hospital":hospital,
+      "ProfileImage": imagePath,
     };
   }
 
@@ -41,6 +44,7 @@ class usermodel{
         specialist: data["Specialist"],
         hospital: data["Hospital"],
         email: data["Email"],
+        imagePath: 'ProfileImage',
     );
   }
 }

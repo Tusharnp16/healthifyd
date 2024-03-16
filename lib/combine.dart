@@ -273,7 +273,8 @@ class _UserPageeState extends State<UserPagee> {
                         gender: gendercontroller.text.trim(),
                         specialist: specialistcontroller.text.trim(),
                         hospital: hospitalcontroller.text.trim(),
-                        email: emailidcontroller.text.trim());
+                        email: emailidcontroller.text.trim(),
+                        imagePath: '');
 
                     createuser(user);
 
