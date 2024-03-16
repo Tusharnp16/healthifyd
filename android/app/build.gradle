@@ -1,25 +1,21 @@
 buildscript {
     repositories {
         google()
-        mavenCentral() // Replace jcenter with mavenCentral
+        jcenter()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.4.2'// Update Gradle version based on latest Flutter documentation
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.21" // Update Kotlin plugin to latest compatible version
+        classpath 'com.android.tools.build:gradle:4.2.0' // Update the version if necessary
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21"
         classpath 'com.google.gms:google-services:4.4.0'
-        classpath "dev.flutter:flutter-gradle-plugin:6.7.2" // Update Flutter plugin to latest compatible version
+        classpath "dev.flutter:flutter-gradle-plugin:1.0.0"
     }
 }
 
 plugins {
-    id 'com.android.application' version '7.4.2' // Apply Android application plugin
-    id 'kotlin-android' version '1.7.21' // Apply Kotlin Android plugin
-    id "org.jetbrains.kotlin.android" // Apply Kotlin plugin (redundant in newer Gradle versions)
+    id 'com.android.application'
+    id 'kotlin-android'
     id "dev.flutter.flutter-gradle-plugin"
-
-    id 'com.google.gms.google-services' version '4.4.1' apply false
-
 }
 
 def localProperties = new Properties()
@@ -46,13 +42,13 @@ if (flutterVersionName == null) {
 }
 
 android {
-    compileSdkVersion 33 // Adjust to your needs (consider latest supported version)
-    buildToolsVersion "33.0.3" // Adjust to your needs
+    compileSdkVersion 30 // Adjust to your needs
+    buildToolsVersion "30.0.3" // Adjust to your needs
 
     defaultConfig {
         applicationId "com.example.healthifyd"
         minSdkVersion flutter.minSdkVersion // Adjust to your needs
-        targetSdkVersion 33 // Adjust to your needs (consider latest supported version)
+        targetSdkVersion 30 // Adjust to your needs
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
@@ -84,11 +80,8 @@ flutter {
 }
 
 dependencies {
-    implementation platform('com.google.firebase:firebase-bom:32.7.3')
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.21" // Update Kotlin version to match plugin
-     // Update version according to latest documentation
-    classpath 'com.android.tools.build:gradle:7.5.1'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.21"
+    implementation platform('com.google.firebase:firebase-bom:32.7.0')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-auth'
-    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.0"
 }

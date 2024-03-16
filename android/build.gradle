@@ -1,12 +1,12 @@
 buildscript {
     repositories {
         google()
-        mavenCentral() // Optional, enables access to additional repositories
+        mavenCentral()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:7.3.1' // Latest compatible Gradle plugin version
         classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.21' // Update Kotlin plugin to latest compatible version
-        classpath 'org.gradle:dev.flutter.flutter-gradle-plugin:3.3.4' // Update plugin and specify version
+        classpath 'org.gradle:dev.flutter.flutter-gradle-plugin:2.5.2' // Update plugin and specify compatible version
     }
 }
 

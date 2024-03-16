@@ -27,7 +27,7 @@ class home extends StatelessWidget {
                               fontWeight: FontWeight.bold),
                         ),
                         Text(
-                          "Tony",
+                          "Healthify Team",
                           style: TextStyle(
                               fontSize: 25,
                               color: Colors.black87,
@@ -127,7 +127,7 @@ class home extends StatelessWidget {
                                       ),
                                     ),
                                     SizedBox(height: 2,),
-                                    const Expanded(child: Text("New hospital in surat inaugurate by founder of healthify tonybhai",
+                                    const Expanded(child: Text("New hospital in surat inaugurate by founder of healthify tonybhai,kamlesh & heamnt",
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),))
@@ -166,7 +166,7 @@ class home extends StatelessWidget {
                                       ),
                                     ),
                                     SizedBox(height: 2,),
-                                    const Expanded(child: Text("New hospital in surat inaugurate by founder of healthify tonybhai",
+                                    const Expanded(child: Text("New hospital in surat inaugurate by founder of healthify tonybhai ,kamlesh & heamnt",
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),))
@@ -205,7 +205,7 @@ class home extends StatelessWidget {
                                       ),
                                     ),
                                     SizedBox(height: 2,),
-                                    const Expanded(child: Text("Tonybhai going to open new branch of healthify at Lakshadweep meeting done with PM MODI",
+                                    const Expanded(child: Text("Tonybhai(Healthify founder) going to open new branch of healthify at Lakshadweep meeting done with PM MODI",
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),))
